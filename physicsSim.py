@@ -55,17 +55,17 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
 
+    def gravity(self):
+        global ty
+        self.movey += float(variables["Acceleration"])
+
+
     def update(self):
         self.rect.x = self.rect.x + self.movex
         self.rect.y = self.rect.y + self.movey
-
-
-    def gravity(self):
-        global ty
-        self.movey += int(variables["Acceleration"])
-        if self.rect.y > screen_height and self.movey >= 0:
+        if self.rect.bottom > screen_height-ty:
             self.movey = 0
-            self.rect.y = screen_height-ty-ty
+            self.rect.bottom = screen_height-ty
 
 
 class Platform(pygame.sprite.Sprite):
@@ -139,7 +139,7 @@ def entryBox(LB, level, name, list):
 
 
 def forceCalculation(level):
-    force = int(variables["Mass"]) * int(variables["Acceleration"])
+    force = float(variables["Mass"]) * float(variables["Acceleration"])
     
     canvas1 = Canvas(level, width=100, height=25)
     canvas1.pack()
@@ -199,6 +199,9 @@ def simulate():
     ''' 
     Setup
     '''
+    global tx
+    global ty
+
     fps = 60
     clock = pygame.time.Clock()
 
@@ -230,6 +233,8 @@ def simulate():
                     sys.exit()
                 finally:
                     running = False
+
+        screen.fill((255, 255, 255))
 
         player.gravity()
         player.update()
